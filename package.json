@@ -1,6 +1,6 @@
 {
   "name": "dupr-js-client",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A comprehensive TypeScript/JavaScript client for the DUPR (Dynamic Universal Pickleball Rating) API.",
   "license": "MIT",
   "author": "Sunny Tambi",
