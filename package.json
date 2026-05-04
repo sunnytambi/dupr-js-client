@@ -1,0 +1,59 @@
+{
+  "name": "dupr-js-client",
+  "version": "0.1.0",
+  "description": "A comprehensive TypeScript/JavaScript client for the DUPR (Dynamic Universal Pickleball Rating) API.",
+  "license": "MIT",
+  "author": "Sunny Tambi",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src test",
+    "lint:fix": "eslint src test --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "types:generate": "openapi-typescript https://uat.mydupr.com/api/v3/api-docs/DUPR%20Partner%20APIs -o src/types.generated.ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm run typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "eslint": "^8.57.0",
+    "openapi-typescript": "^7.0.0",
+    "prettier": "^3.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.0.0"
+  },
+  "keywords": [
+    "dupr",
+    "pickleball",
+    "rating",
+    "api",
+    "client",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sunnytambi/dupr-js-client"
+  }
+}
