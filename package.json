@@ -5,21 +5,23 @@
   "license": "MIT",
   "author": "Sunny Tambi",
   "type": "module",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "default": "./dist/index.js"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && npm run typecheck",
+    "prepack": "npm run build && npm run typecheck",
+    "pack": "npm pack --dry-run",
+    "validate": "npm run lint && npm run test && npm run typecheck",
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
