@@ -102,7 +102,7 @@ DUPR returns an `access_token` (no refresh token). Use this for API calls that o
 ```javascript
 const axios = require('axios');
 async function requestToken(params) {
-  const res = await axios.post(`${process.env.DUPR_API_URL}/auth/v1.0/token`, params);
+  const res = await axios.post(`${process.env.DUPR_API_BASE_URL}/auth/v1.0/token`, params);
   return res.data; // contains access_token, refresh_token, expires_in
 }
 // Example: Exchange code

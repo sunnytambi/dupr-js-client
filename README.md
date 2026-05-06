@@ -149,7 +149,7 @@ const client = new DuprClient(options);
 import { DuprClient } from "dupr-js-client";
 
 export const dupr = new DuprClient({
-  baseUrl: process.env.DUPR_BASE_URL ?? "https://uat.mydupr.com/api",
+  baseUrl: process.env.DUPR_API_BASE_URL ?? "https://uat.mydupr.com/api",
   auth: {
     type: "clientCredentials",
     clientKey: process.env.DUPR_CLIENT_KEY!,
@@ -160,7 +160,7 @@ export const dupr = new DuprClient({
 
 ```ini
 # .env
-DUPR_BASE_URL=https://uat.mydupr.com/api
+DUPR_API_BASE_URL=https://uat.mydupr.com/api
 DUPR_CLIENT_KEY=your_client_key
 DUPR_CLIENT_SECRET=your_client_secret
 ```
@@ -794,7 +794,7 @@ it("retries once then succeeds", async () => {
 import { DuprClient } from "dupr-js-client";
 
 export const dupr = new DuprClient({
-  baseUrl: process.env.DUPR_BASE_URL ?? "https://uat.mydupr.com/api",
+  baseUrl: process.env.DUPR_API_BASE_URL ?? "https://uat.mydupr.com/api",
   auth: {
     type: "clientCredentials",
     clientKey: process.env.DUPR_CLIENT_KEY!,

@@ -363,7 +363,7 @@ Once the library exists, your Express backend becomes nearly trivial:
 import { DuprClient } from "dupr-js-client";
 
 export const client = new DuprClient({
-  baseUrl: process.env.DUPR_BASE_URL ?? "https://uat.mydupr.com/api",
+  baseUrl: process.env.DUPR_API_BASE_URL ?? "https://uat.mydupr.com/api",
   version: "v1.0",
   timeoutMs: 30_000,
   auth: {
