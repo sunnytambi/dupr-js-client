@@ -1,6 +1,6 @@
 export { DuprClient } from "./client.js";
 export { AuthModule } from "./auth.js";
-export type { AuthCodeTokenResponse, AuthorizationUrlParams } from "./auth.js";
+export type { AuthCodeTokenResponse, AuthorizationUrlParams, SsoTokenResponse } from "./auth.js";
 export { UsersModule } from "./resources/users.js";
 export { PlayersModule } from "./resources/players.js";
 export { PlayerRatingModule } from "./resources/playerRating.js";

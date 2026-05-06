@@ -42,6 +42,26 @@ export interface DuprClientOptions {
   onResponse?: (info: ResponseInfo) => void;
   /** Retry behaviour for transient errors (5xx, network failures, 429). Pass `false` to disable. */
   retry?: RetryOptions | false;
+  /**
+   * Base URL for the DUPR SSO iframe login widget.
+   * UAT:  "https://uat.dupr.gg"
+   * Prod: "https://dashboard.dupr.com"
+   * Required to call `client.auth.getSsoIframeUrl()`.
+   */
+  ssoBaseUrl?: string;
+  /**
+   * Base URL for refreshing DUPR SSO user tokens — a separate host from the Partner API.
+   * UAT:  "https://api.uat.dupr.gg"
+   * Prod: "https://api.dupr.gg"
+   * Required to call `client.auth.refreshSsoToken()`.
+   */
+  ssoRefreshBaseUrl?: string;
+  /**
+   * Authorization endpoint URL for the OAuth 2.0 authorization code flow.
+   * Confirm the exact value with DUPR support before use.
+   * Required to call `client.auth.getAuthorizationUrl()`.
+   */
+  authorizationUrl?: string;
 }
 
 export interface ResolvedRetryOptions {
@@ -62,6 +82,9 @@ export interface ResolvedConfig {
   onResponse?: (info: ResponseInfo) => void;
   /** Runtime override for the bearer token — set via `client.setBearerToken()`. */
   overrideBearerToken?: string;
+  ssoBaseUrl?: string;
+  ssoRefreshBaseUrl?: string;
+  authorizationUrl?: string;
 }
 
 export function resolveConfig(opts: DuprClientOptions): ResolvedConfig {
@@ -83,5 +106,8 @@ export function resolveConfig(opts: DuprClientOptions): ResolvedConfig {
   };
   if (opts.onRequest) cfg.onRequest = opts.onRequest;
   if (opts.onResponse) cfg.onResponse = opts.onResponse;
+  if (opts.ssoBaseUrl) cfg.ssoBaseUrl = opts.ssoBaseUrl;
+  if (opts.ssoRefreshBaseUrl) cfg.ssoRefreshBaseUrl = opts.ssoRefreshBaseUrl;
+  if (opts.authorizationUrl) cfg.authorizationUrl = opts.authorizationUrl;
   return cfg;
 }
