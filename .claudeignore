@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Lock file
+package-lock.json
+
+*.png
+*.jpg
