@@ -22,7 +22,7 @@ export class MatchesModule {
 
   /** GET /match/{version}/{id} — view a single match */
   get(matchId: string): Promise<ApiWrapper<MatchResponse>> {
-    return this.http.get(`/match/${this.cfg.version}/${matchId}`);
+    return this.http.get(`/match/${this.cfg.version}/${encodeURIComponent(matchId)}`);
   }
 
   /** POST /match/{version}/create — submit a new match result */
@@ -52,7 +52,7 @@ export class MatchesModule {
 
   /** DELETE /match/{version}/annotate/{matchId} — remove a match annotation */
   deleteAnnotation(matchId: string): Promise<ApiWrapper> {
-    return this.http.delete(`/match/${this.cfg.version}/annotate/${matchId}`);
+    return this.http.delete(`/match/${this.cfg.version}/annotate/${encodeURIComponent(matchId)}`);
   }
 
   /** POST /match/history/search — search a player's match history */

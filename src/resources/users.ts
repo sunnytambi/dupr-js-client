@@ -23,17 +23,17 @@ export class UsersModule {
 
   /** GET /user/{version}/{id} — basic player profile */
   getUser(duprId: string): Promise<ApiWrapper<UserInfo>> {
-    return this.http.get(`/user/${this.cfg.version}/${duprId}`);
+    return this.http.get(`/user/${this.cfg.version}/${encodeURIComponent(duprId)}`);
   }
 
   /** GET /user/{version}/{id}/details — extended profile (requires USER_EMAIL::VIEW permission) */
   getExtendedUser(duprId: string): Promise<ApiWrapper<ExtendedUserInfo>> {
-    return this.http.get(`/user/${this.cfg.version}/${duprId}/details`);
+    return this.http.get(`/user/${this.cfg.version}/${encodeURIComponent(duprId)}/details`);
   }
 
   /** GET /user/{version}/{id}/clubs — club memberships for a player */
   getClubMemberships(duprId: string): Promise<ClubMembershipResponse> {
-    return this.http.get(`/user/${this.cfg.version}/${duprId}/clubs`);
+    return this.http.get(`/user/${this.cfg.version}/${encodeURIComponent(duprId)}/clubs`);
   }
 
   /** POST /user/{version}/search — full-text player search with optional filters */

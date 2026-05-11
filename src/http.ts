@@ -132,7 +132,8 @@ export class HttpClient {
       ...(init?.headers as Record<string, string> | undefined ?? {}),
     };
 
-    this.config.onRequest?.({ method, url, headers });
+    const { Authorization: _redacted, ...hookHeaders } = headers;
+    this.config.onRequest?.({ method, url, headers: hookHeaders });
 
     const start = Date.now();
     const res = await this.config.customFetch(url, {

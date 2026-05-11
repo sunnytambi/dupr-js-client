@@ -25,7 +25,7 @@ export class WebhooksModule {
 
   /** GET /{version}/webhook/schema/{topic} — get the JSON schema for a specific topic */
   getSchema(topic: string): Promise<ApiWrapper<WebhookSchema>> {
-    return this.http.get(`/${this.cfg.version}/webhook/schema/${topic}`);
+    return this.http.get(`/${this.cfg.version}/webhook/schema/${encodeURIComponent(topic)}`);
   }
 
   /** POST /user/{version}/subscribe/webhook-event — subscribe specific users to a webhook topic */

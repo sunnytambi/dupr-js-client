@@ -1,3 +1,4 @@
+import { createHash, randomBytes } from "crypto";
 import { HttpClient } from "./http.js";
 import { ResolvedConfig } from "./config.js";
 import { AuthenticationError } from "./errors.js";
@@ -24,6 +25,8 @@ export interface AuthorizationUrlParams {
   scopes?: string[];
   /** Opaque value passed through the flow to prevent CSRF. Recommended. */
   state?: string;
+  /** PKCE code_challenge (S256). Generate the pair with `client.auth.generatePkce()`. */
+  codeChallenge?: string;
 }
 
 export class AuthModule {
@@ -82,9 +85,18 @@ export class AuthModule {
   //   4. Store access_token + refresh_token; call client.setBearerToken(access_token)
   //   5. When access_token expires: client.auth.refreshToken(refresh_token)
 
+  /** Generate a PKCE `code_verifier` + `code_challenge` pair (S256 method).
+   *  Pass `codeChallenge` to `getAuthorizationUrl()` and `codeVerifier` to `exchangeCode()`. */
+  generatePkce(): { codeVerifier: string; codeChallenge: string } {
+    const codeVerifier = randomBytes(32).toString("base64url");
+    const codeChallenge = createHash("sha256").update(codeVerifier).digest("base64url");
+    return { codeVerifier, codeChallenge };
+  }
+
   /**
    * Build the DUPR authorization URL to redirect the user to for login.
    * The `authorizationUrl` config option must be set (see above note).
+   * Pass `codeChallenge` (from `generatePkce()`) to enable PKCE.
    */
   getAuthorizationUrl(params: AuthorizationUrlParams): string {
     if (!this.config.authorizationUrl) {
@@ -99,6 +111,10 @@ export class AuthModule {
     url.searchParams.set("redirect_uri", params.redirectUri);
     if (params.scopes?.length) url.searchParams.set("scope", params.scopes.join(" "));
     if (params.state) url.searchParams.set("state", params.state);
+    if (params.codeChallenge) {
+      url.searchParams.set("code_challenge", params.codeChallenge);
+      url.searchParams.set("code_challenge_method", "S256");
+    }
     return url.toString();
   }
 
@@ -109,6 +125,8 @@ export class AuthModule {
   async exchangeCode(params: {
     code: string;
     redirectUri: string;
+    /** PKCE code_verifier. Required if `codeChallenge` was passed to `getAuthorizationUrl()`. */
+    codeVerifier?: string;
   }): Promise<AuthCodeTokenResponse> {
     if (this.config.auth.type !== "clientCredentials") {
       throw new AuthenticationError("exchangeCode() requires clientCredentials auth configured with clientKey/clientSecret", 401);
@@ -122,6 +140,7 @@ export class AuthModule {
       client_id: clientKey,
       client_secret: clientSecret,
     });
+    if (params.codeVerifier) body.set("code_verifier", params.codeVerifier);
 
     const res = await this.config.customFetch(url, {
       method: "POST",
