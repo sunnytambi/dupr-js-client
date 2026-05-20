@@ -6,11 +6,14 @@
 // ──────────────────────────────────────────────────────────────
 
 export type MatchFormat = "SINGLES" | "DOUBLES";
-export type MatchSource = "PARTNER" | "CLUB";
+export type MatchSource = "DUPR" | "LEAGUE" | "PARTNER" | "CLUB";
+export type MatchType = "RALLY" | "SIDEOUT";
+export type MatchCompletionType = "FORFEIT" | "WITHDRAWAL" | "RETIREMENT" | "COMPLETED" | "UNKNOWN";
+export type MatchPlayType = "RECREATIONAL" | "TOURNAMENT" | "LEAGUE" | "INFORMATIONAL" | "UNKNOWN";
 export type Gender = "MALE" | "FEMALE";
 export type RatingType = "SINGLES" | "DOUBLES";
 export type WebhookTopic = "RATING";
-export type ApiStatus = "SUCCESS" | "FAILURE";
+export type ApiStatus = "SUCCESS" | "FAILURE" | "REDIRECT" | "PARTIAL";
 
 // ──────────────────────────────────────────────────────────────
 // Common wrappers
@@ -27,9 +30,15 @@ export interface ApiWrapper<T = unknown> {
 // ──────────────────────────────────────────────────────────────
 
 export interface TokenResponse {
+  /** Flat format (some DUPR environments return the token directly at the top level). */
   token?: string;
   accessToken?: string;
   expiresIn?: number;
+  /** Wrapped format — the Partner API auth endpoint returns { status, result: { token, expiry } }. */
+  result?: {
+    token?: string;
+    expiry?: string; // ISO datetime
+  };
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -138,33 +147,72 @@ export interface DeleteProvisionalRatingRequest {
 // Matches
 // ──────────────────────────────────────────────────────────────
 
-export interface ExternalMatchPlayer {
-  duprId: string;
-}
-
 export interface ExternalMatchTeam {
-  /** 1 player for SINGLES, 2 for DOUBLES */
-  players: ExternalMatchPlayer[];
-  /** Scores per game, aligned with the opposing team's scores array */
-  scores: number[];
+  /** DUPR ID of player 1. Required for both SINGLES and DOUBLES. */
+  player1: string;
+  /** DUPR ID of player 2. Required for DOUBLES; omit for SINGLES. */
+  player2?: string;
+  game1: number;
+  game2?: number;
+  game3?: number;
+  game4?: number;
+  game5?: number;
 }
 
 export interface ExternalMatchRequest {
-  /** Your universally unique identifier — must not be reused across matches */
+  /** Universally unique identifier for this match — must never be reused. */
   identifier: string;
-  /** yyyy-MM-dd */
+  /** yyyy-MM-dd (ISO 8601 date). */
   matchDate: string;
-  matchFormat: MatchFormat;
-  teams: [ExternalMatchTeam, ExternalMatchTeam];
-  source: MatchSource;
-  eventId?: number;
+  /** Match format: SINGLES or DOUBLES. Required. */
+  format: MatchFormat;
+  teamA: ExternalMatchTeam;
+  teamB: ExternalMatchTeam;
+  /** Event name in which this match was played. Required. */
+  event: string;
+  /** RALLY or SIDEOUT scoring format. */
+  matchType?: MatchType;
+  /** Source of the match. */
+  matchSource?: MatchSource;
+  /** Display-only location string. */
+  location?: string;
+  /** Display-only bracket name. */
+  bracket?: string;
+  /** DUPR Club unique identifier. Required when matchSource is CLUB. */
   clubId?: number;
+  /** Optional key-value metadata. */
+  extras?: Record<string, string>;
+  matchCompletionType?: MatchCompletionType;
+  matchPlayType?: MatchPlayType;
 }
 
 export interface ExternalUpdateMatchRequest {
-  matchId: string;
+  /** DUPR internal match ID returned in the create response. Required. */
+  matchId: number;
+  /** Universally unique identifier for this match. */
+  identifier?: string;
+  /** yyyy-MM-dd (ISO 8601 date). */
   matchDate?: string;
-  teams?: [ExternalMatchTeam, ExternalMatchTeam];
+  /** Match format: SINGLES or DOUBLES. */
+  format?: MatchFormat;
+  teamA?: ExternalMatchTeam;
+  teamB?: ExternalMatchTeam;
+  /** Event name in which this match was played. */
+  event?: string;
+  /** RALLY or SIDEOUT scoring format. */
+  matchType?: MatchType;
+  /** Source of the match. */
+  matchSource?: MatchSource;
+  /** Display-only location string. */
+  location?: string;
+  /** Display-only bracket name. */
+  bracket?: string;
+  /** DUPR Club unique identifier. */
+  clubId?: number;
+  /** Optional key-value metadata. */
+  extras?: Record<string, string>;
+  matchCompletionType?: MatchCompletionType;
+  matchPlayType?: MatchPlayType;
 }
 
 export interface ExternalDeleteMatchRequest {

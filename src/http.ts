@@ -1,5 +1,6 @@
 import { ResolvedConfig } from "./config.js";
 import { AuthenticationError, buildError, RateLimitError, ServerError } from "./errors.js";
+import type { TokenResponse } from "./types.js";
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -58,12 +59,19 @@ export class HttpClient {
 
     if (!res.ok) throw await buildError(res);
 
-    const body = await res.json() as { token?: string; accessToken?: string; expiresIn?: number };
-    this.token = body.token ?? body.accessToken ?? null;
+    const body = await res.json() as TokenResponse;
+    // The Partner API wraps the token in result: { token, expiry }.
+    // Older/alternate environments return it at the top level — handle both.
+    this.token = body.result?.token ?? body.token ?? body.accessToken ?? null;
     if (!this.token) throw new AuthenticationError("Token response contained no token", 401);
 
-    const ttlSec = body.expiresIn ?? 3600;
-    this.tokenExpiresAt = Date.now() + (ttlSec - 60) * 1000;
+    if (body.result?.expiry) {
+      // expiry is an ISO datetime string; subtract 60s buffer
+      this.tokenExpiresAt = new Date(body.result.expiry).getTime() - 60_000;
+    } else {
+      const ttlSec = body.expiresIn ?? 3600;
+      this.tokenExpiresAt = Date.now() + (ttlSec - 60) * 1000;
+    }
     return this.token;
   }
 

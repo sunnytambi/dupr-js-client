@@ -32,6 +32,9 @@ export type {
   // Shared
   MatchFormat,
   MatchSource,
+  MatchType,
+  MatchCompletionType,
+  MatchPlayType,
   Gender,
   RatingType,
   WebhookTopic,
@@ -57,7 +60,6 @@ export type {
   UpdateProvisionalRatingRequest,
   DeleteProvisionalRatingRequest,
   // Matches
-  ExternalMatchPlayer,
   ExternalMatchTeam,
   ExternalMatchRequest,
   ExternalUpdateMatchRequest,
