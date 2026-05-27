@@ -179,7 +179,7 @@ export interface ExternalMatchRequest {
   /** Display-only bracket name. */
   bracket?: string;
   /** DUPR Club unique identifier. Required when matchSource is CLUB. */
-  clubId?: number;
+  clubId?: string | number;
   /** Optional key-value metadata. */
   extras?: Record<string, string>;
   matchCompletionType?: MatchCompletionType;
@@ -208,7 +208,7 @@ export interface ExternalUpdateMatchRequest {
   /** Display-only bracket name. */
   bracket?: string;
   /** DUPR Club unique identifier. */
-  clubId?: number;
+  clubId?: string | number;
   /** Optional key-value metadata. */
   extras?: Record<string, string>;
   matchCompletionType?: MatchCompletionType;
@@ -288,7 +288,7 @@ export interface CreateEventRequestV1 {
   startDate: string;
   endDate: string;
   location?: string;
-  clubId?: number;
+  clubId?: string | number;
 }
 
 export interface UpdateEventRequestV1 {
