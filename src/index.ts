@@ -46,6 +46,8 @@ export type {
   ExtendedUserInfo,
   ClubMembership,
   ClubMembershipResponse,
+  UserClubMembership,
+  UserClubMembershipResponse,
   ExternalSearchRequest,
   ExternalSearchFilter,
   ExternalFilterLocation,

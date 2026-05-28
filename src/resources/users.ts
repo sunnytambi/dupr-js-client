@@ -3,6 +3,7 @@ import { ResolvedConfig } from "../config.js";
 import {
   ApiWrapper,
   ClubMembershipResponse,
+  UserClubMembershipResponse,
   CreateProvisionalRatingRequest,
   DeleteProvisionalRatingRequest,
   ExtendedUserInfo,
@@ -31,9 +32,19 @@ export class UsersModule {
     return this.http.get(`/user/${this.cfg.version}/${encodeURIComponent(duprId)}/details`);
   }
 
-  /** GET /user/{version}/{id}/clubs — club memberships for a player */
+  /** GET /user/{version}/{id}/clubs — club memberships for a player (partner API, legacy) */
   getClubMemberships(duprId: string): Promise<ClubMembershipResponse> {
     return this.http.get(`/user/${this.cfg.version}/${encodeURIComponent(duprId)}/clubs`);
+  }
+
+  /**
+   * GET /user/club/membership — club memberships for the authenticated user (SSO user API).
+   * Must be called against the SSO API base URL (e.g. https://api.uat.dupr.gg) with the
+   * user's SSO bearer token, NOT the partner API base URL.
+   * Returns `{ membership: [{ clubId: number, clubName: string, role: string }] }`.
+   */
+  getMyClubMemberships(): Promise<UserClubMembershipResponse> {
+    return this.http.get(`/user/club/membership`);
   }
 
   /** POST /user/{version}/search — full-text player search with optional filters */

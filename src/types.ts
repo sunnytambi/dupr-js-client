@@ -70,6 +70,18 @@ export interface ClubMembershipResult {
 
 export type ClubMembershipResponse = ApiWrapper<ClubMembershipResult>;
 
+/** Club membership entry returned by the SSO user API (`GET /user/club/membership`). */
+export interface UserClubMembership {
+  clubId: number;
+  clubName: string;
+  role: string;
+}
+
+/** Response from `GET https://api.{env}.dupr.gg/user/club/membership` (SSO user API). */
+export interface UserClubMembershipResponse {
+  membership: UserClubMembership[];
+}
+
 export interface ExternalSearchFilter {
   gender?: Gender;
   location?: ExternalFilterLocation;
