@@ -91,3 +91,12 @@ export type {
   UserWebhookRequest,
   WebhookSchema,
 } from "./types.js";
+
+export {
+  DUPR_DASHBOARD_BASE_URLS,
+  getDuprClubDashboardUrl,
+  CLUB_REGISTRATION_FORM_URL,
+  US_STATE_FORM_IDS,
+  buildClubRegistrationFormUrl,
+} from "./utils.js";
+export type { ClubRegistrationFormParams } from "./utils.js";
